@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: "demo.webflux.product"
+  output:
+    ansi:
+      enabled: always
+  sql:
+    init:
+      data-locations: "classpath:sql/schema.sql"
+      mode: always
+  r2dbc:
+    url: r2dbc:h2:mem:///product;
+    username: sa
+    password:
+logging:
+  level:
+    com.jpdr.apps.demo.webflux: DEBUG
+    org.springframework.r2dbc: DEBUG
+app:
+  base-url:
+    retailer: "http://localhost:8083"

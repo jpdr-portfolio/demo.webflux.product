@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -24,36 +25,43 @@ public class AppController {
   private final AppService appService;
   
   @GetMapping("/products")
-  public ResponseEntity<Flux<ProductDto>> findAllProducts(
+  public Mono<ResponseEntity<List<ProductDto>>>findAllProducts(
     @RequestParam(name="categoryId",required = false) Integer categoryId,
     @RequestParam(name="retailerId",required = false) Integer retailerId){
-    return new ResponseEntity<>(appService.findAllProducts(categoryId, retailerId), HttpStatus.OK);
+    return this.appService.findAllProducts(categoryId, retailerId)
+      .map(products -> new ResponseEntity<>(products, HttpStatus.OK));
   }
   
   @GetMapping("/products/{productId}")
-  public ResponseEntity<Mono<ProductDto>> findProductById(@PathVariable(name="productId") Integer productId){
-    return new ResponseEntity<>(appService.findProductById(productId), HttpStatus.OK);
+  public Mono<ResponseEntity<ProductDto>> findProductById(@PathVariable(name="productId") Integer productId){
+    return this.appService.findProductById(productId)
+      .map(product -> new ResponseEntity<>(product, HttpStatus.OK));
   }
   
   @PostMapping("/products")
-  public ResponseEntity<Mono<ProductDto>> createProduct(@RequestBody ProductDto productDto){
-    return new ResponseEntity<>(appService.createProduct(productDto), HttpStatus.CREATED);
+  public Mono<ResponseEntity<ProductDto>> createProduct(@RequestBody ProductDto productDto){
+    return this.appService.createProduct(productDto)
+      .map(product -> new ResponseEntity<>(product, HttpStatus.CREATED));
   }
   
   
   @GetMapping("/categories")
-  public ResponseEntity<Flux<CategoryDto>> findAllCategories(){
-    return new ResponseEntity<>(appService.findAllCategories(), HttpStatus.OK);
+  public Mono<ResponseEntity<List<CategoryDto>>> findAllCategories(){
+    return this.appService.findAllCategories()
+      .map(categories -> new ResponseEntity<>(categories, HttpStatus.OK));
   }
   
   @GetMapping("/categories/{categoryId}")
-  public ResponseEntity<Mono<CategoryDto>> findCategoryById(@PathVariable(name="categoryId") Integer categoryId){
-    return new ResponseEntity<>(appService.findCategoryById(categoryId), HttpStatus.OK);
+  public Mono<ResponseEntity<CategoryDto>> findCategoryById(
+    @PathVariable(name="categoryId") Integer categoryId){
+    return this.appService.findCategoryById(categoryId)
+      .map(category -> new ResponseEntity<>(category, HttpStatus.OK));
   }
   
   @PostMapping("/categories")
-  public ResponseEntity<Mono<CategoryDto>> createCategory(@RequestBody CategoryDto categoryDto){
-    return new ResponseEntity<>(appService.createCategory(categoryDto), HttpStatus.CREATED);
+  public Mono<ResponseEntity<CategoryDto>> createCategory(@RequestBody CategoryDto categoryDto){
+    return this.appService.createCategory(categoryDto)
+      .map(category -> new ResponseEntity<>(category, HttpStatus.CREATED));
   }
   
 }

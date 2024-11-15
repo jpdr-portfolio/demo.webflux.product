@@ -26,6 +26,7 @@ import reactor.core.publisher.Mono;
 import reactor.util.function.Tuples;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import static com.jpdr.apps.demo.webflux.product.util.InputValidator.isValidName;
 
@@ -40,16 +41,16 @@ public class AppServiceImpl implements AppService {
   
   
   @Override
-  public Flux<ProductDto> findAllProducts(Integer categoryId, Integer retailerId) {
-    return Flux.from(Mono.justOrEmpty(categoryId)
-        .flatMapMany(this::findProductsByCategoryId))
-      .switchIfEmpty(Flux.from(Mono.justOrEmpty(retailerId)
-        .flatMapMany(this::findProductsByRetailerId)))
+  public Mono<List<ProductDto>> findAllProducts(Integer categoryId, Integer retailerId) {
+    return Mono.from(Mono.justOrEmpty(categoryId)
+        .flatMap(this::findProductsByCategoryId))
+      .switchIfEmpty(Mono.from(Mono.justOrEmpty(retailerId)
+        .flatMap(this::findProductsByRetailerId)))
       .switchIfEmpty(findAllProducts());
   }
   
   @Override
-  public Flux<ProductDto> findAllProducts(){
+  public Mono<List<ProductDto>> findAllProducts(){
     log.debug("findAllProducts");
     return this.productRepository.findAllByIsActiveTrue()
       .doOnNext(product -> log.debug(product.toString()))
@@ -71,7 +72,8 @@ public class AppServiceImpl implements AppService {
         productDto.setRetailerName(tuple.getT3().getName());
         return productDto;
       })
-      .doOnNext(productDto -> log.debug(productDto.toString()));
+      .doOnNext(productDto -> log.debug(productDto.toString()))
+      .collectList();
   }
   
   @Override
@@ -99,10 +101,11 @@ public class AppServiceImpl implements AppService {
           return productDto;
       })
       .doOnNext(productDto -> log.debug(productDto.toString()));
+      
   }
   
   @Override
-  public Flux<ProductDto> findProductsByCategoryId(Integer categoryId) {
+  public Mono<List<ProductDto>> findProductsByCategoryId(Integer categoryId) {
     log.debug("findProductsByCategoryId");
     return Mono.from(getCategory(categoryId))
       .switchIfEmpty(Mono.error(new CategoryNotFoundException(categoryId)))
@@ -123,11 +126,12 @@ public class AppServiceImpl implements AppService {
         productDto.setRetailerName(tuple.getT3().getName());
         return productDto;
         })
-      .doOnNext(productDto -> log.debug(productDto.toString()));
+      .doOnNext(productDto -> log.debug(productDto.toString()))
+      .collectList();
   }
   
   @Override
-  public Flux<ProductDto> findProductsByRetailerId(Integer retailerId) {
+  public Mono<List<ProductDto>> findProductsByRetailerId(Integer retailerId) {
     log.debug("findProductsByRetailerId");
     return Mono.from(getRetailerDto(retailerId))
       .flatMapMany(retailerDto ->
@@ -147,7 +151,8 @@ public class AppServiceImpl implements AppService {
         productDto.setRetailerName(tuple.getT1().getName());
         return productDto;
       })
-      .doOnNext(productDto -> log.debug(productDto.toString()));
+      .doOnNext(productDto -> log.debug(productDto.toString()))
+      .collectList();
   }
   
   @Override
@@ -182,11 +187,12 @@ public class AppServiceImpl implements AppService {
   }
   
   @Override
-  public Flux<CategoryDto> findAllCategories() {
+  public Mono<List<CategoryDto>> findAllCategories() {
     log.debug("findAllCategories");
     return this.categoryRepository.findAllByIsActiveTrue()
       .map(CategoryMapper.INSTANCE::entityToDto)
-      .doOnNext(category -> log.debug(category.toString()));
+      .doOnNext(category -> log.debug(category.toString()))
+      .collectList();
   }
   
   @Override

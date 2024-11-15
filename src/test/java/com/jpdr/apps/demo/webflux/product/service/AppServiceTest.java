@@ -91,12 +91,12 @@ class AppServiceTest {
       .thenReturn(Flux.fromIterable(expectedProducts));
     
     StepVerifier.create(appService.findAllProducts(null,null))
-      .assertNext(receivedProduct -> assertProduct(expectedProductsMap.get(receivedProduct.getId()),
-        receivedProduct, category.getName(), retailer.getName()))
-      .assertNext(receivedProduct -> assertProduct(expectedProductsMap.get(receivedProduct.getId()),
-        receivedProduct, category.getName(), retailer.getName()))
-      .assertNext(receivedProduct -> assertProduct(expectedProductsMap.get(receivedProduct.getId()),
-        receivedProduct, category.getName(), retailer.getName()))
+      .assertNext(receivedProducts ->{
+        for(ProductDto receivedProduct : receivedProducts){
+          assertProduct(expectedProductsMap.get(receivedProduct.getId()),
+            receivedProduct, category.getName(), retailer.getName());
+        }
+      })
       .expectComplete()
       .verify();
   }
@@ -115,12 +115,12 @@ class AppServiceTest {
       .thenReturn(Mono.empty());
     
     StepVerifier.create(appService.findAllProducts(null,null))
-      .assertNext(receivedProduct -> assertProduct(expectedProductsMap.get(receivedProduct.getId()),
-        receivedProduct, StringUtils.EMPTY, retailer.getName()))
-      .assertNext(receivedProduct -> assertProduct(expectedProductsMap.get(receivedProduct.getId()),
-        receivedProduct, StringUtils.EMPTY, retailer.getName()))
-      .assertNext(receivedProduct -> assertProduct(expectedProductsMap.get(receivedProduct.getId()),
-        receivedProduct, StringUtils.EMPTY, retailer.getName()))
+      .assertNext(receivedProducts ->{
+        for(ProductDto receivedProduct : receivedProducts){
+          assertProduct(expectedProductsMap.get(receivedProduct.getId()),
+            receivedProduct, "", retailer.getName());
+        }
+      })
       .expectComplete()
       .verify();
   }
@@ -139,12 +139,12 @@ class AppServiceTest {
       .thenReturn(Mono.error(new RetailerNotFoundException(1, new RuntimeException())));
     
     StepVerifier.create(appService.findAllProducts(null,null))
-      .assertNext(receivedProduct -> assertProduct(expectedProductsMap.get(receivedProduct.getId()),
-        receivedProduct, category.getName(), StringUtils.EMPTY))
-      .assertNext(receivedProduct -> assertProduct(expectedProductsMap.get(receivedProduct.getId()),
-        receivedProduct, category.getName(), StringUtils.EMPTY))
-      .assertNext(receivedProduct -> assertProduct(expectedProductsMap.get(receivedProduct.getId()),
-        receivedProduct, category.getName(), StringUtils.EMPTY))
+      .assertNext(receivedProducts ->{
+        for(ProductDto receivedProduct : receivedProducts){
+          assertProduct(expectedProductsMap.get(receivedProduct.getId()),
+            receivedProduct, category.getName(), "");
+        }
+      })
       .expectComplete()
       .verify();
   }
@@ -226,8 +226,8 @@ class AppServiceTest {
       .thenReturn(Flux.just(expectedProduct));
     
     StepVerifier.create(appService.findProductsByCategoryId(1))
-      .assertNext(receivedProduct -> assertProduct(expectedProduct,
-        receivedProduct, category.getName(), retailer.getName()))
+      .assertNext(receivedProducts -> assertProduct(expectedProduct,
+        receivedProducts.getFirst(), category.getName(), retailer.getName()))
       .expectComplete()
       .verify();
     
@@ -257,8 +257,8 @@ class AppServiceTest {
       .thenReturn(Flux.just(expectedProduct));
     
     StepVerifier.create(appService.findProductsByRetailerId(1))
-      .assertNext(receivedProduct -> assertProduct(expectedProduct,
-        receivedProduct, category.getName(), retailer.getName()))
+      .assertNext(receivedProducts -> assertProduct(expectedProduct,
+        receivedProducts.getFirst(), category.getName(), retailer.getName()))
       .expectComplete()
       .verify();
     
@@ -356,12 +356,12 @@ class AppServiceTest {
       .thenReturn(Flux.fromIterable(expectedCategories));
     
     StepVerifier.create(appService.findAllCategories())
-      .assertNext(receivedCategory -> assertCategory(expectedCategoriesMap.get(receivedCategory.getId()),
-        receivedCategory))
-      .assertNext(receivedCategory -> assertCategory(expectedCategoriesMap.get(receivedCategory.getId()),
-          receivedCategory))
-      .assertNext(receivedCategory -> assertCategory(expectedCategoriesMap.get(receivedCategory.getId()),
-            receivedCategory))
+      .assertNext(receivedCategories ->{
+        for(CategoryDto receivedCategory : receivedCategories){
+          assertCategory(expectedCategoriesMap.get(receivedCategory.getId()),
+            receivedCategory);
+        }
+      })
       .expectComplete()
       .verify();
   }

@@ -16,7 +16,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.FluxExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -53,7 +52,7 @@ class AppControllerTest {
     String expectedBody = objectMapper.writeValueAsString(expectedProducts);
     
     when(appService.findAllProducts(isNull(), isNull()))
-      .thenReturn(Flux.fromIterable(expectedProducts));
+      .thenReturn(Mono.just(expectedProducts));
     
     FluxExchangeResult<String> exchangeResult = this.webTestClient.get()
       .uri("/products")
@@ -102,7 +101,7 @@ class AppControllerTest {
     String expectedBody = objectMapper.writeValueAsString(expectedProducts);
     
     when(appService.findAllProducts(anyInt(), isNull()))
-      .thenReturn(Flux.fromIterable(expectedProducts));
+      .thenReturn(Mono.just(expectedProducts));
     
     FluxExchangeResult<String> exchangeResult = this.webTestClient.get()
       .uri("/products" +"?categoryId=1")
@@ -127,7 +126,7 @@ class AppControllerTest {
     String expectedBody = objectMapper.writeValueAsString(expectedProducts);
     
     when(appService.findAllProducts(isNull(), anyInt()))
-      .thenReturn(Flux.fromIterable(expectedProducts));
+      .thenReturn(Mono.just(expectedProducts));
     
     FluxExchangeResult<String> exchangeResult = this.webTestClient.get()
       .uri("/products" +"?retailerId=1")
@@ -182,7 +181,7 @@ class AppControllerTest {
     List<CategoryDto> expectedCategories = getCategoryDtos();
     String expectedBody = objectMapper.writeValueAsString(expectedCategories);
     
-    when(appService.findAllCategories()).thenReturn(Flux.fromIterable(expectedCategories));
+    when(appService.findAllCategories()).thenReturn(Mono.just(expectedCategories));
     
     FluxExchangeResult<String> exchangeResult = this.webTestClient.get()
       .uri("/categories")

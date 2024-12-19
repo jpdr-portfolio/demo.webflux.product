@@ -6,6 +6,7 @@ import com.jpdr.apps.demo.webflux.product.repository.retailer.RetailerRepository
 import com.jpdr.apps.demo.webflux.product.service.dto.retailer.RetailerDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -26,6 +27,7 @@ public class RetailerRepositoryImpl implements RetailerRepository {
   
   
   @Override
+  @Cacheable(key = "#retailerId", value = "retailers", sync = true)
   public Mono<RetailerDto> getRetailerById(Integer retailerId) {
     return this.webClient.get()
       .uri("/retailers/{retailerId}", retailerId)

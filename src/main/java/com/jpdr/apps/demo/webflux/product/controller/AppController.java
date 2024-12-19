@@ -1,5 +1,6 @@
 package com.jpdr.apps.demo.webflux.product.controller;
 
+import com.jpdr.apps.demo.webflux.eventlogger.component.EventLogger;
 import com.jpdr.apps.demo.webflux.product.service.AppService;
 import com.jpdr.apps.demo.webflux.product.service.dto.product.CategoryDto;
 import com.jpdr.apps.demo.webflux.product.service.dto.product.ProductDto;
@@ -23,24 +24,28 @@ import java.util.List;
 public class AppController {
   
   private final AppService appService;
+  private final EventLogger eventLogger;
   
   @GetMapping("/products")
   public Mono<ResponseEntity<List<ProductDto>>>findAllProducts(
     @RequestParam(name="categoryId",required = false) Integer categoryId,
     @RequestParam(name="retailerId",required = false) Integer retailerId){
     return this.appService.findAllProducts(categoryId, retailerId)
+      .doOnNext(list -> this.eventLogger.logEvent("findAllProducts", list))
       .map(products -> new ResponseEntity<>(products, HttpStatus.OK));
   }
   
   @GetMapping("/products/{productId}")
   public Mono<ResponseEntity<ProductDto>> findProductById(@PathVariable(name="productId") Integer productId){
     return this.appService.findProductById(productId)
+      .doOnNext(product -> this.eventLogger.logEvent("findProductById", product))
       .map(product -> new ResponseEntity<>(product, HttpStatus.OK));
   }
   
   @PostMapping("/products")
   public Mono<ResponseEntity<ProductDto>> createProduct(@RequestBody ProductDto productDto){
     return this.appService.createProduct(productDto)
+      .doOnNext(product -> this.eventLogger.logEvent("createProduct", product))
       .map(product -> new ResponseEntity<>(product, HttpStatus.CREATED));
   }
   
@@ -48,6 +53,8 @@ public class AppController {
   @GetMapping("/categories")
   public Mono<ResponseEntity<List<CategoryDto>>> findAllCategories(){
     return this.appService.findAllCategories()
+      .doOnNext(categories -> this.eventLogger
+        .logEvent("findAllCategories", categories))
       .map(categories -> new ResponseEntity<>(categories, HttpStatus.OK));
   }
   
@@ -55,12 +62,15 @@ public class AppController {
   public Mono<ResponseEntity<CategoryDto>> findCategoryById(
     @PathVariable(name="categoryId") Integer categoryId){
     return this.appService.findCategoryById(categoryId)
+      .doOnNext(category -> this.eventLogger
+        .logEvent("findCategoryById", category))
       .map(category -> new ResponseEntity<>(category, HttpStatus.OK));
   }
   
   @PostMapping("/categories")
   public Mono<ResponseEntity<CategoryDto>> createCategory(@RequestBody CategoryDto categoryDto){
     return this.appService.createCategory(categoryDto)
+      .doOnNext(category -> this.eventLogger.logEvent("createCategory", category))
       .map(category -> new ResponseEntity<>(category, HttpStatus.CREATED));
   }
   

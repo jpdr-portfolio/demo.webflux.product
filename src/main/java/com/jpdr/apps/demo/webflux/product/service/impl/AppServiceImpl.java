@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
@@ -38,7 +39,6 @@ public class AppServiceImpl implements AppService {
   private final ProductRepository productRepository;
   private final CategoryRepository categoryRepository;
   private final RetailerRepository retailerRepository;
-  
   
   @Override
   public Mono<List<ProductDto>> findAllProducts(Integer categoryId, Integer retailerId) {
@@ -77,6 +77,7 @@ public class AppServiceImpl implements AppService {
   }
   
   @Override
+  @Cacheable(key = "#productId", value = "products", sync = true)
   public Mono<ProductDto> findProductById(Integer productId) {
     log.debug("findProductById");
     return this.productRepository.findByIdAndIsActiveTrue(productId)
@@ -196,6 +197,7 @@ public class AppServiceImpl implements AppService {
   }
   
   @Override
+  @Cacheable(key = "#categoryId", value = "categories", sync = true)
   public Mono<CategoryDto> findCategoryById(Integer categoryId) {
     log.debug("findCategoryById");
     return this.categoryRepository.findByIdAndIsActiveTrue(categoryId)

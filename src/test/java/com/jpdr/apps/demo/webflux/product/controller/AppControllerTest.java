@@ -2,6 +2,7 @@ package com.jpdr.apps.demo.webflux.product.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jpdr.apps.demo.webflux.eventlogger.component.EventLogger;
 import com.jpdr.apps.demo.webflux.product.service.AppService;
 import com.jpdr.apps.demo.webflux.product.service.dto.product.CategoryDto;
 import com.jpdr.apps.demo.webflux.product.service.dto.product.ProductDto;
@@ -33,7 +34,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ExtendWith(MockitoExtension.class)
 class AppControllerTest {
   
@@ -43,6 +44,8 @@ class AppControllerTest {
   private AppService appService;
   @Autowired
   private ObjectMapper objectMapper;
+  @MockBean
+  private EventLogger eventLogger;
   
   @Test
   @DisplayName("OK - Find All Products")

@@ -54,7 +54,7 @@ public class AppServiceImpl implements AppService {
     log.debug("findAllProducts");
     return this.productRepository.findAllByIsActiveTrue()
       .doOnNext(product -> log.debug(product.toString()))
-      .flatMap(product ->
+      .flatMapSequential(product ->
         Mono.zip(
           Mono.just(product),
           Mono.from(getCategory(product.getCategoryId())
@@ -114,7 +114,7 @@ public class AppServiceImpl implements AppService {
         Flux.zip(
           Mono.just(category).repeat(),
           this.productRepository.findByCategoryIdAndIsActiveTrue(category.getId())))
-      .flatMap(tuple ->
+      .flatMapSequential(tuple ->
         Flux.zip(
           Mono.just(tuple.getT1()).repeat(),
           Mono.just(tuple.getT2()).repeat(),
@@ -139,7 +139,7 @@ public class AppServiceImpl implements AppService {
         Flux.zip(
           Mono.just(retailerDto).repeat(),
           Mono.from(this.productRepository.findByRetailerIdAndIsActiveTrue(retailerId))))
-      .flatMap(tuple ->
+      .flatMapSequential(tuple ->
         Flux.zip(
           Mono.just(tuple.getT1()).repeat(),
           Mono.just(tuple.getT2()).repeat(),

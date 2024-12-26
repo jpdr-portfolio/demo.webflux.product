@@ -157,6 +157,7 @@ public class AppServiceImpl implements AppService {
   }
   
   @Override
+  @Cacheable(key = "#productId", value = "products", sync = true)
   @Transactional
   public Mono<ProductDto> createProduct(ProductDto productDto) {
     log.debug("createProduct");
@@ -207,6 +208,7 @@ public class AppServiceImpl implements AppService {
   }
   
   @Override
+  @Cacheable(key = "#categoryId", value = "categories", sync = true)
   @Transactional
   public Mono<CategoryDto> createCategory(CategoryDto categoryDto) {
     log.debug("createCategory");

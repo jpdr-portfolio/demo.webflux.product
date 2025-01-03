@@ -1,5 +1,6 @@
 package com.jpdr.apps.demo.webflux.product.service;
 
+import com.jpdr.apps.demo.webflux.commons.caching.CacheHelper;
 import com.jpdr.apps.demo.webflux.product.exception.product.CategoryNotFoundException;
 import com.jpdr.apps.demo.webflux.product.exception.retailer.RetailerNotFoundException;
 import com.jpdr.apps.demo.webflux.product.model.Category;
@@ -54,18 +55,15 @@ class AppServiceTest {
   
   @InjectMocks
   private AppServiceImpl appService;
-  
   @Mock
   private ProductRepository productRepository;
-  
   @Mock
   private CategoryRepository categoryRepository;
-  
   @Mock
   private RetailerRepository retailerRepository;
-  
+  @Mock
+  private CacheHelper cacheHelper;
   private Category category;
-  
   private RetailerDto retailer;
   
   @BeforeEach

@@ -1,5 +1,6 @@
 package com.jpdr.apps.demo.webflux.product.service.impl;
 
+import com.jpdr.apps.demo.webflux.commons.caching.CacheHelper;
 import com.jpdr.apps.demo.webflux.product.exception.product.CategoryNotFoundException;
 import com.jpdr.apps.demo.webflux.product.exception.product.ProductNotFoundException;
 import com.jpdr.apps.demo.webflux.product.exception.retailer.RetailerNotFoundException;
@@ -29,7 +30,7 @@ import reactor.util.function.Tuples;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-import static com.jpdr.apps.demo.webflux.product.util.InputValidator.isValidName;
+import static com.jpdr.apps.demo.webflux.commons.validation.InputValidator.isValidName;
 
 @Slf4j
 @Service
@@ -39,6 +40,7 @@ public class AppServiceImpl implements AppService {
   private final ProductRepository productRepository;
   private final CategoryRepository categoryRepository;
   private final RetailerRepository retailerRepository;
+  private final CacheHelper cacheHelper;
   
   @Override
   public Mono<List<ProductDto>> findAllProducts(Integer categoryId, Integer retailerId) {
@@ -157,7 +159,6 @@ public class AppServiceImpl implements AppService {
   }
   
   @Override
-  @Cacheable(key = "#productId", value = "products", sync = true)
   @Transactional
   public Mono<ProductDto> createProduct(ProductDto productDto) {
     log.debug("createProduct");
@@ -185,7 +186,9 @@ public class AppServiceImpl implements AppService {
         savedProductDto.setRetailerName(tuple.getT3().getName());
         return savedProductDto;
       })
-    .doOnNext(savedProductDto -> log.debug(savedProductDto.toString()));
+    .doOnNext(savedProductDto -> log.debug(savedProductDto.toString()))
+    .doOnNext(savedProductDto -> this.cacheHelper.put("products",
+      savedProductDto.getId(), savedProductDto));
   }
   
   @Override
@@ -208,7 +211,6 @@ public class AppServiceImpl implements AppService {
   }
   
   @Override
-  @Cacheable(key = "#categoryId", value = "categories", sync = true)
   @Transactional
   public Mono<CategoryDto> createCategory(CategoryDto categoryDto) {
     log.debug("createCategory");
@@ -221,7 +223,9 @@ public class AppServiceImpl implements AppService {
       })
       .flatMap(categoryRepository::save)
       .map(CategoryMapper.INSTANCE::entityToDto)
-      .doOnNext(resultCategory -> log.debug(resultCategory.toString()));
+      .doOnNext(resultCategory -> log.debug(resultCategory.toString()))
+      .doOnNext(resultCategory -> this.cacheHelper.put("categories",
+        resultCategory.getId(), resultCategory));
   }
   
   private Mono<Category> getCategory(Integer categoryId){

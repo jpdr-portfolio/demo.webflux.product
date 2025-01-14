@@ -10,6 +10,6 @@ import reactor.core.publisher.Mono;
 public interface CategoryRepository extends ReactiveCrudRepository<Category, Long> {
   
   Mono<Category> findByIdAndIsActiveTrue(Long categoryId);
-  Flux<Category> findAllByIsActiveTrue();
+  Flux<Category> findAllByIsActiveTrueOrderById();
   
 }

@@ -10,9 +10,9 @@ import reactor.core.publisher.Mono;
 public interface ProductRepository extends ReactiveCrudRepository<Product, Long> {
   
   Mono<Product> findByIdAndIsActiveTrue(Long productId);
-  Flux<Product> findAllByIsActiveTrue();
-  Flux<Product> findByCategoryIdAndIsActiveTrue(Long categoryId);
-  Flux<Product> findBySubCategoryIdAndIsActiveTrue(Long subCategoryId);
-  Flux<Product> findByRetailerIdAndIsActiveTrue(Long retailerId);
+  Flux<Product> findAllByIsActiveTrueOrderById();
+  Flux<Product> findByCategoryIdAndIsActiveTrueOrderById(Long categoryId);
+  Flux<Product> findBySubCategoryIdAndIsActiveTrueOrderById(Long subCategoryId);
+  Flux<Product> findByRetailerIdAndIsActiveTrueOrderById(Long retailerId);
   
 }

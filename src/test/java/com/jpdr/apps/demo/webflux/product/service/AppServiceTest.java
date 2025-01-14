@@ -101,7 +101,7 @@ class AppServiceTest {
     Map<Long, Product> expectedProductsMap = expectedProducts.stream()
       .collect(Collectors.toMap(Product::getId, Function.identity()));
     
-    when(productRepository.findAllByIsActiveTrue())
+    when(productRepository.findAllByIsActiveTrueOrderById())
       .thenReturn(Flux.fromIterable(expectedProducts));
     
     StepVerifier.create(appService.findAllProducts(null,null, null))
@@ -123,7 +123,7 @@ class AppServiceTest {
     Map<Long, Product> expectedProductsMap = expectedProducts.stream()
       .collect(Collectors.toMap(Product::getId, Function.identity()));
     
-    when(productRepository.findAllByIsActiveTrue())
+    when(productRepository.findAllByIsActiveTrueOrderById())
       .thenReturn(Flux.fromIterable(expectedProducts));
     when(categoryRepository.findByIdAndIsActiveTrue(anyLong()))
       .thenReturn(Mono.empty());
@@ -147,7 +147,7 @@ class AppServiceTest {
     Map<Long, Product> expectedProductsMap = expectedProducts.stream()
       .collect(Collectors.toMap(Product::getId, Function.identity()));
     
-    when(productRepository.findAllByIsActiveTrue())
+    when(productRepository.findAllByIsActiveTrueOrderById())
       .thenReturn(Flux.fromIterable(expectedProducts));
     when(subCategoryRepository.findByIdAndIsActiveTrue(anyLong()))
       .thenReturn(Mono.empty());
@@ -171,7 +171,7 @@ class AppServiceTest {
     Map<Long, Product> expectedProductsMap = expectedProducts.stream()
       .collect(Collectors.toMap(Product::getId, Function.identity()));
     
-    when(productRepository.findAllByIsActiveTrue())
+    when(productRepository.findAllByIsActiveTrueOrderById())
       .thenReturn(Flux.fromIterable(expectedProducts));
     when(retailerRepository.findByIdAndIsActiveIsTrue(anyLong()))
       .thenReturn(Mono.empty());
@@ -279,7 +279,7 @@ class AppServiceTest {
     
     Product expectedProduct = getProduct();
     
-    when(productRepository.findByCategoryIdAndIsActiveTrue(anyLong()))
+    when(productRepository.findByCategoryIdAndIsActiveTrueOrderById(anyLong()))
       .thenReturn(Flux.just(expectedProduct));
     
     StepVerifier.create(appService.findAllProducts(1L, null, null))
@@ -309,7 +309,7 @@ class AppServiceTest {
     
     Product expectedProduct = getProduct();
     
-    when(productRepository.findBySubCategoryIdAndIsActiveTrue(anyLong()))
+    when(productRepository.findBySubCategoryIdAndIsActiveTrueOrderById(anyLong()))
       .thenReturn(Flux.just(expectedProduct));
     
     StepVerifier.create(appService.findAllProducts(null,1L, null))
@@ -340,7 +340,7 @@ class AppServiceTest {
     
     Product expectedProduct = getProduct();
     
-    when(productRepository.findByRetailerIdAndIsActiveTrue(anyLong()))
+    when(productRepository.findByRetailerIdAndIsActiveTrueOrderById(anyLong()))
       .thenReturn(Flux.just(expectedProduct));
     
     StepVerifier.create(appService.findAllProducts(null, null, 1L))
@@ -453,7 +453,7 @@ class AppServiceTest {
     Map<Long, Category> expectedCategoriesMap = expectedCategories.stream()
       .collect(Collectors.toMap(Category::getId, Function.identity()));
     
-    when(categoryRepository.findAllByIsActiveTrue())
+    when(categoryRepository.findAllByIsActiveTrueOrderById())
       .thenReturn(Flux.fromIterable(expectedCategories));
     
     StepVerifier.create(appService.findAllCategories())
@@ -517,7 +517,7 @@ class AppServiceTest {
     Map<Long, SubCategory> expectedCategoriesMap = expectedSubCategories.stream()
       .collect(Collectors.toMap(SubCategory::getId, Function.identity()));
     
-    when(subCategoryRepository.findAllByIsActiveTrue())
+    when(subCategoryRepository.findAllByIsActiveTrueOrderById())
       .thenReturn(Flux.fromIterable(expectedSubCategories));
     
     StepVerifier.create(appService.findAllSubCategories())
@@ -579,7 +579,7 @@ class AppServiceTest {
     Map<Long, Retailer> expectedRetailersMap = expectedRetailers.stream()
       .collect(Collectors.toMap(Retailer::getId, Function.identity()));
     
-    when(retailerRepository.findAllByIsActiveIsTrue())
+    when(retailerRepository.findAllByIsActiveIsTrueOrderById())
       .thenReturn(Flux.fromIterable(expectedRetailers));
     
     StepVerifier.create(appService.findAllRetailers())

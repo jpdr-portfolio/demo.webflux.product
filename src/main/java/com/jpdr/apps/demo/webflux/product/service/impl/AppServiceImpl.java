@@ -71,7 +71,7 @@ public class AppServiceImpl implements AppService {
   @Override
   public Mono<List<ProductDto>> findAllProducts() {
     log.debug("findAllProducts");
-    return this.productRepository.findAllByIsActiveTrue()
+    return this.productRepository.findAllByIsActiveTrueOrderById()
       .doOnNext(product -> log.debug(product.toString()))
       .flatMapSequential(product ->
         Mono.zip(Mono.just(product),
@@ -134,7 +134,8 @@ public class AppServiceImpl implements AppService {
         .switchIfEmpty(Mono.error(new CategoryNotFoundException(categoryId)))
       .flatMapMany(category ->
         Flux.zip(
-          Mono.from(this.productRepository.findByCategoryIdAndIsActiveTrue(category.getId())),
+          Mono.from(this.productRepository
+            .findByCategoryIdAndIsActiveTrueOrderById(category.getId())),
           Mono.just(category).repeat()))
       .flatMapSequential(tuple ->
         Flux.zip(
@@ -163,7 +164,8 @@ public class AppServiceImpl implements AppService {
         .switchIfEmpty(Mono.error(new SubCategoryNotFoundException(subCategoryId)))
       .flatMapMany(subCategory ->
         Flux.zip(
-          Mono.from(this.productRepository.findBySubCategoryIdAndIsActiveTrue(subCategory.getId())),
+          Mono.from(this.productRepository
+            .findBySubCategoryIdAndIsActiveTrueOrderById(subCategory.getId())),
           Mono.just(subCategory).repeat()))
       .flatMapSequential(tuple ->
         Flux.zip(
@@ -192,7 +194,8 @@ public class AppServiceImpl implements AppService {
       .switchIfEmpty(Mono.error(new RetailerNotFoundException(retailerId)))
       .flatMapMany(retailerDto ->
         Flux.zip(
-          Mono.from(this.productRepository.findByRetailerIdAndIsActiveTrue(retailerId)),
+          Mono.from(this.productRepository
+            .findByRetailerIdAndIsActiveTrueOrderById(retailerId)),
         Mono.just(retailerDto).repeat()))
       .flatMapSequential(tuple ->
         Flux.zip(
@@ -259,14 +262,20 @@ public class AppServiceImpl implements AppService {
   @Override
   public Mono<List<CategoryDto>> findAllCategories() {
     log.debug("findAllCategories");
-    return this.categoryRepository.findAllByIsActiveTrue().map(CategoryMapper.INSTANCE::entityToDto).doOnNext(category -> log.debug(category.toString())).collectList();
+    return this.categoryRepository.findAllByIsActiveTrueOrderById()
+      .map(CategoryMapper.INSTANCE::entityToDto)
+      .doOnNext(category -> log.debug(category.toString()))
+      .collectList();
   }
   
   @Override
   @Cacheable(key = "#categoryId", value = "categories", sync = true)
   public Mono<CategoryDto> findCategoryById(Long categoryId) {
     log.debug("findCategoryById");
-    return this.categoryRepository.findByIdAndIsActiveTrue(categoryId).switchIfEmpty(Mono.error(new CategoryNotFoundException(categoryId))).map(CategoryMapper.INSTANCE::entityToDto).doOnNext(category -> log.debug(category.toString()));
+    return this.categoryRepository.findByIdAndIsActiveTrue(categoryId)
+      .switchIfEmpty(Mono.error(new CategoryNotFoundException(categoryId)))
+      .map(CategoryMapper.INSTANCE::entityToDto)
+      .doOnNext(category -> log.debug(category.toString()));
   }
   
   @Override
@@ -285,7 +294,7 @@ public class AppServiceImpl implements AppService {
   public Mono<List<SubCategoryDto>> findAllSubCategories() {
     log.debug("findAllSubCategories");
     return this.subCategoryRepository
-      .findAllByIsActiveTrue()
+      .findAllByIsActiveTrueOrderById()
       .flatMap(subCategory ->
         Mono.zip(
           Mono.just(subCategory),
@@ -351,7 +360,7 @@ public class AppServiceImpl implements AppService {
   @Override
   public Mono<List<RetailerDto>> findAllRetailers() {
     log.debug("findAllRetailers");
-    return this.retailerRepository.findAllByIsActiveIsTrue()
+    return this.retailerRepository.findAllByIsActiveIsTrueOrderById()
       .map(RetailerMapper.INSTANCE::entityToDto)
       .doOnNext(retailer -> log.debug(retailer.toString())).collectList();
   }

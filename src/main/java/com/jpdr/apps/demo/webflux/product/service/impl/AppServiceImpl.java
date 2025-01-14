@@ -413,7 +413,7 @@ public class AppServiceImpl implements AppService {
   
   private Mono<ProductDto> validateProduct(ProductDto productDto) {
     return Mono.just(productDto)
-      .filter(product -> isValidName(product.getProductName()))
+      .filter(product ->  !StringUtils.isAllBlank(product.getProductName()))
       .switchIfEmpty(Mono.error(new ValidationException("The product name is not valid")));
   }
   

@@ -1,4 +1,4 @@
-package com.jpdr.apps.demo.webflux.product.repository.product;
+package com.jpdr.apps.demo.webflux.product.repository;
 
 import com.jpdr.apps.demo.webflux.product.model.Category;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
@@ -7,9 +7,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
-public interface CategoryRepository extends ReactiveCrudRepository<Category, Integer> {
+public interface CategoryRepository extends ReactiveCrudRepository<Category, Long> {
   
-  Mono<Category> findByIdAndIsActiveTrue(Integer categoryId);
+  Mono<Category> findByIdAndIsActiveTrue(Long categoryId);
   Flux<Category> findAllByIsActiveTrue();
   
 }

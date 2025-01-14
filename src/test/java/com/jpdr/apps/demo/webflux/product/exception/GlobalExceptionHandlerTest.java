@@ -1,10 +1,6 @@
 package com.jpdr.apps.demo.webflux.product.exception;
 
 import com.jpdr.apps.demo.webflux.product.exception.dto.ErrorDto;
-import com.jpdr.apps.demo.webflux.product.exception.product.CategoryNotFoundException;
-import com.jpdr.apps.demo.webflux.product.exception.product.ProductNotFoundException;
-import com.jpdr.apps.demo.webflux.product.exception.retailer.RetailerNotFoundException;
-import com.jpdr.apps.demo.webflux.product.exception.retailer.RetailerRepositoryException;
 import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,33 +53,33 @@ class GlobalExceptionHandlerTest {
   @Test
   @DisplayName("Error - ProductNotFoundException")
   void givenProductNotFoundExceptionWhenHandleExceptionThenReturnError(){
-    ProductNotFoundException exception = new ProductNotFoundException(1);
+    ProductNotFoundException exception = new ProductNotFoundException(1L);
     ResponseEntity<Mono<ErrorDto>> response = globalExceptionHandler.handleException(exception);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
   }
   
   @Test
   @DisplayName("Error - CategoryNotFoundException")
   void givenCategoryNotFoundExceptionWhenHandleExceptionThenReturnError(){
-    CategoryNotFoundException exception = new CategoryNotFoundException(1);
+    CategoryNotFoundException exception = new CategoryNotFoundException(1L);
     ResponseEntity<Mono<ErrorDto>> response = globalExceptionHandler.handleException(exception);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+  }
+  
+  @Test
+  @DisplayName("Error - SubCategoryNotFoundException")
+  void givenSubCategoryNotFoundExceptionWhenHandleExceptionThenReturnError(){
+    SubCategoryNotFoundException exception = new SubCategoryNotFoundException(1L);
+    ResponseEntity<Mono<ErrorDto>> response = globalExceptionHandler.handleException(exception);
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
   }
   
   @Test
   @DisplayName("Error - RetailerNotFoundException")
   void givenRetailerNotFoundExceptionWhenHandleExceptionThenReturnError(){
-    RetailerNotFoundException exception = new RetailerNotFoundException(1, new RuntimeException());
+    RetailerNotFoundException exception = new RetailerNotFoundException(1L);
     ResponseEntity<Mono<ErrorDto>> response = globalExceptionHandler.handleException(exception);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-  }
-  
-  @Test
-  @DisplayName("Error - RetailerRepositoryException")
-  void givenRetailerRepositoryExceptionWhenHandleExceptionThenReturnError(){
-    RetailerRepositoryException exception = new RetailerRepositoryException(1, new RuntimeException());
-    ResponseEntity<Mono<ErrorDto>> response = globalExceptionHandler.handleException(exception);
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
   }
   
   @Test

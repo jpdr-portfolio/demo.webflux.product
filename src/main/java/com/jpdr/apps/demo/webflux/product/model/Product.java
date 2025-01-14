@@ -18,13 +18,15 @@ public class Product {
   
   @Id
   @Column("id")
-  Integer id;
+  Long id;
   @Column("name")
   String name;
   @Column("category_id")
-  Integer categoryId;
+  Long categoryId;
+  @Column("sub_category_id")
+  Long subCategoryId;
   @Column("retailer_id")
-  Integer retailerId;
+  Long retailerId;
   @Column("is_active")
   Boolean isActive;
   @Column("creation_date")

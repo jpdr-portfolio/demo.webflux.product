@@ -1,8 +1,8 @@
-package com.jpdr.apps.demo.webflux.product.exception.product;
+package com.jpdr.apps.demo.webflux.product.exception;
 
 public class CategoryNotFoundException extends RuntimeException{
   
-  public CategoryNotFoundException(Integer categoryId){
+  public CategoryNotFoundException(Long categoryId){
     super("The category " + categoryId + " wasn't found.");
   }
   

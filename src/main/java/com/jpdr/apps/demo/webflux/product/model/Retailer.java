@@ -11,16 +11,24 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.time.OffsetDateTime;
 
 @Data
-@Table("category")
+@Table("retailer")
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Category {
+public class Retailer {
   
   @Id
   @Column("id")
   Long id;
   @Column("name")
   String name;
+  @Column("email")
+  String email;
+  @Column("address")
+  String address;
+  @Column("city")
+  String city;
+  @Column("country")
+  String country;
   @Column("is_active")
   Boolean isActive;
   @Column("creation_date")

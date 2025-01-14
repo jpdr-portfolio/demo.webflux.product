@@ -1,7 +1,7 @@
 package com.jpdr.apps.demo.webflux.product.service.mapper;
 
 import com.jpdr.apps.demo.webflux.product.model.Category;
-import com.jpdr.apps.demo.webflux.product.service.dto.product.CategoryDto;
+import com.jpdr.apps.demo.webflux.product.service.dto.CategoryDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

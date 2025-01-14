@@ -1,9 +1,6 @@
 package com.jpdr.apps.demo.webflux.product.exception;
 
 import com.jpdr.apps.demo.webflux.product.exception.dto.ErrorDto;
-import com.jpdr.apps.demo.webflux.product.exception.product.CategoryNotFoundException;
-import com.jpdr.apps.demo.webflux.product.exception.product.ProductNotFoundException;
-import com.jpdr.apps.demo.webflux.product.exception.retailer.RetailerNotFoundException;
 import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -45,7 +42,7 @@ public class GlobalExceptionHandler {
   ResponseEntity<Mono<ErrorDto>> handleException(ProductNotFoundException ex){
     log.warn(ExceptionUtils.getStackTrace(ex));
     ErrorDto errorDto = new ErrorDto(ex.getMessage());
-    return new ResponseEntity<>(Mono.just(errorDto), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(Mono.just(errorDto), HttpStatus.NOT_FOUND);
   }
   
   
@@ -53,14 +50,21 @@ public class GlobalExceptionHandler {
   ResponseEntity<Mono<ErrorDto>> handleException(CategoryNotFoundException ex){
     log.warn(ExceptionUtils.getStackTrace(ex));
     ErrorDto errorDto = new ErrorDto(ex.getMessage());
-    return new ResponseEntity<>(Mono.just(errorDto), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(Mono.just(errorDto), HttpStatus.NOT_FOUND);
+  }
+  
+  @ExceptionHandler(SubCategoryNotFoundException.class)
+  ResponseEntity<Mono<ErrorDto>> handleException(SubCategoryNotFoundException ex){
+    log.warn(ExceptionUtils.getStackTrace(ex));
+    ErrorDto errorDto = new ErrorDto(ex.getMessage());
+    return new ResponseEntity<>(Mono.just(errorDto), HttpStatus.NOT_FOUND);
   }
   
   @ExceptionHandler(RetailerNotFoundException.class)
   ResponseEntity<Mono<ErrorDto>> handleException(RetailerNotFoundException ex){
     log.warn(ExceptionUtils.getStackTrace(ex));
     ErrorDto errorDto = new ErrorDto(ex.getMessage());
-    return new ResponseEntity<>(Mono.just(errorDto), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(Mono.just(errorDto), HttpStatus.NOT_FOUND);
   }
 
   

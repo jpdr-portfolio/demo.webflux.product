@@ -1,4 +1,4 @@
-package com.jpdr.apps.demo.webflux.product.service.dto.product;
+package com.jpdr.apps.demo.webflux.product.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -17,10 +17,14 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryDto implements Serializable {
+public class SubCategoryDto implements Serializable {
   
   @JsonInclude(Include.NON_NULL)
-  Integer id;
+  Long id;
+  @NonNull
+  Long categoryId;
+  @JsonInclude(Include.NON_NULL)
+  String categoryName;
   @NonNull
   String name;
   @JsonInclude(Include.NON_NULL)

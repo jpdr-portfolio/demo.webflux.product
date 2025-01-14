@@ -295,7 +295,7 @@ public class AppServiceImpl implements AppService {
     log.debug("findAllSubCategories");
     return this.subCategoryRepository
       .findAllByIsActiveTrueOrderById()
-      .flatMap(subCategory ->
+      .flatMapSequential(subCategory ->
         Mono.zip(
           Mono.just(subCategory),
           Mono.from(getCategory(subCategory.getCategoryId()))

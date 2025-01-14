@@ -22,7 +22,7 @@ public class CategoryDto implements Serializable {
   @JsonInclude(Include.NON_NULL)
   Long id;
   @NonNull
-  String name;
+  String categoryName;
   @JsonInclude(Include.NON_NULL)
   Boolean isActive;
   @JsonInclude(Include.NON_EMPTY)

@@ -22,7 +22,7 @@ public class ProductDto implements Serializable {
   @JsonInclude(Include.NON_NULL)
   Long id;
   @NonNull
-  String name;
+  String productName;
   @JsonInclude(Include.NON_NULL)
   Long categoryId;
   @JsonInclude(Include.NON_NULL)

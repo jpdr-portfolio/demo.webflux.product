@@ -19,16 +19,16 @@ public class Retailer {
   @Id
   @Column("id")
   Long id;
-  @Column("name")
-  String name;
-  @Column("email")
-  String email;
-  @Column("address")
-  String address;
-  @Column("city")
-  String city;
-  @Column("country")
-  String country;
+  @Column("retailer_name")
+  String retailerName;
+  @Column("retailer_email")
+  String retailerEmail;
+  @Column("retailer_address")
+  String retailerAddress;
+  @Column("retailer_city")
+  String retailerCity;
+  @Column("retailer_country")
+  String retailerCountry;
   @Column("is_active")
   Boolean isActive;
   @Column("creation_date")

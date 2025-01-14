@@ -108,7 +108,8 @@ class AppServiceTest {
       .assertNext(receivedProducts ->{
         for(ProductDto receivedProduct : receivedProducts){
           assertProduct(expectedProductsMap.get(receivedProduct.getId()),
-            receivedProduct, category.getName(), subCategory.getName(), retailer.getName());
+            receivedProduct, category.getCategoryName(), subCategory.getSubCategoryName(),
+            retailer.getRetailerName());
         }
       })
       .expectComplete()
@@ -132,7 +133,8 @@ class AppServiceTest {
       .assertNext(receivedProducts ->{
         for(ProductDto receivedProduct : receivedProducts){
           assertProduct(expectedProductsMap.get(receivedProduct.getId()),
-            receivedProduct, StringUtils.EMPTY, subCategory.getName(), retailer.getName());
+            receivedProduct, StringUtils.EMPTY, subCategory.getSubCategoryName(),
+            retailer.getRetailerName());
         }
       })
       .expectComplete()
@@ -156,7 +158,8 @@ class AppServiceTest {
       .assertNext(receivedProducts ->{
         for(ProductDto receivedProduct : receivedProducts){
           assertProduct(expectedProductsMap.get(receivedProduct.getId()),
-            receivedProduct, category.getName(), StringUtils.EMPTY, retailer.getName());
+            receivedProduct, category.getCategoryName(), StringUtils.EMPTY, 
+            retailer.getRetailerName());
         }
       })
       .expectComplete()
@@ -180,7 +183,8 @@ class AppServiceTest {
       .assertNext(receivedProducts ->{
         for(ProductDto receivedProduct : receivedProducts){
           assertProduct(expectedProductsMap.get(receivedProduct.getId()),
-            receivedProduct, category.getName(), subCategory.getName(), StringUtils.EMPTY);
+            receivedProduct, category.getCategoryName(), subCategory.getSubCategoryName(), 
+            StringUtils.EMPTY);
         }
       })
       .expectComplete()
@@ -198,7 +202,8 @@ class AppServiceTest {
     
     StepVerifier.create(appService.findProductById(1L))
       .assertNext(receivedProduct -> assertProduct(expectedProduct,
-        receivedProduct, category.getName(), subCategory.getName(), retailer.getName()))
+        receivedProduct, category.getCategoryName(), subCategory.getSubCategoryName(), 
+        retailer.getRetailerName()))
       .expectComplete()
       .verify();
     
@@ -217,7 +222,8 @@ class AppServiceTest {
     
     StepVerifier.create(appService.findProductById(1L))
       .assertNext(receivedProduct -> assertProduct(expectedProduct,
-        receivedProduct, StringUtils.EMPTY, subCategory.getName(), retailer.getName()))
+        receivedProduct, StringUtils.EMPTY, subCategory.getSubCategoryName(), 
+        retailer.getRetailerName()))
       .expectComplete()
       .verify();
     
@@ -236,7 +242,7 @@ class AppServiceTest {
     
     StepVerifier.create(appService.findProductById(1L))
       .assertNext(receivedProduct -> assertProduct(expectedProduct,
-        receivedProduct, category.getName(), StringUtils.EMPTY, retailer.getName()))
+        receivedProduct, category.getCategoryName(), StringUtils.EMPTY, retailer.getRetailerName()))
       .expectComplete()
       .verify();
     
@@ -256,7 +262,7 @@ class AppServiceTest {
     
     StepVerifier.create(appService.findProductById(1L))
       .assertNext(receivedProduct -> assertProduct(expectedProduct,
-        receivedProduct, category.getName(), subCategory.getName(), StringUtils.EMPTY))
+        receivedProduct, category.getCategoryName(), subCategory.getSubCategoryName(), StringUtils.EMPTY))
       .expectComplete()
       .verify();
     
@@ -284,7 +290,7 @@ class AppServiceTest {
     
     StepVerifier.create(appService.findAllProducts(1L, null, null))
       .assertNext(receivedProducts -> assertProduct(expectedProduct,
-        receivedProducts.getFirst(), category.getName(), subCategory.getName(), retailer.getName()))
+        receivedProducts.getFirst(), category.getCategoryName(), subCategory.getSubCategoryName(), retailer.getRetailerName()))
       .expectComplete()
       .verify();
     
@@ -314,7 +320,7 @@ class AppServiceTest {
     
     StepVerifier.create(appService.findAllProducts(null,1L, null))
       .assertNext(receivedProducts -> assertProduct(expectedProduct,
-        receivedProducts.getFirst(), category.getName(), subCategory.getName(), retailer.getName()))
+        receivedProducts.getFirst(), category.getCategoryName(), subCategory.getSubCategoryName(), retailer.getRetailerName()))
       .expectComplete()
       .verify();
     
@@ -345,7 +351,7 @@ class AppServiceTest {
     
     StepVerifier.create(appService.findAllProducts(null, null, 1L))
       .assertNext(receivedProducts -> assertProduct(expectedProduct,
-        receivedProducts.getFirst(), category.getName(), subCategory.getName(), retailer.getName()))
+        receivedProducts.getFirst(), category.getCategoryName(), subCategory.getSubCategoryName(), retailer.getRetailerName()))
       .expectComplete()
       .verify();
     
@@ -381,7 +387,7 @@ class AppServiceTest {
     
     StepVerifier.create(appService.createProduct(requestProduct))
       .assertNext(receivedProduct -> assertProduct(expectedProduct,
-        receivedProduct, category.getName(), subCategory.getName(), retailer.getName()))
+        receivedProduct, category.getCategoryName(), subCategory.getSubCategoryName(), retailer.getRetailerName()))
       .expectComplete()
       .verify();
     
@@ -636,9 +642,11 @@ class AppServiceTest {
     StepVerifier.create(appService.createRetailer(requestRetailer))
       .assertNext(receivedRetailer -> {
         assertNotNull(receivedRetailer.getId());
-        assertEquals(expectedRetailer.getName(), receivedRetailer.getName());
-        assertEquals(expectedRetailer.getEmail(), receivedRetailer.getEmail());
-        assertEquals(expectedRetailer.getAddress(), receivedRetailer.getAddress());
+        assertEquals(expectedRetailer.getRetailerName(), receivedRetailer.getRetailerName());
+        assertEquals(expectedRetailer.getRetailerEmail(), receivedRetailer.getRetailerEmail());
+        assertEquals(expectedRetailer.getRetailerAddress(), receivedRetailer.getRetailerAddress());
+        assertEquals(expectedRetailer.getRetailerCity(), receivedRetailer.getRetailerCity());
+        assertEquals(expectedRetailer.getRetailerCountry(), receivedRetailer.getRetailerCountry());
         assertTrue(receivedRetailer.getIsActive());
         assertNotNull(receivedRetailer.getCreationDate());
         assertTrue(StringUtils.isBlank(receivedRetailer.getDeletionDate()));
@@ -655,7 +663,7 @@ class AppServiceTest {
   private static void assertProduct(Product entity, ProductDto dto, String categoryName,
     String subCategoryName, String retailerName){
     assertEquals(entity.getId(), dto.getId());
-    assertEquals(entity.getName(), dto.getName());
+    assertEquals(entity.getProductName(), dto.getProductName());
     assertEquals(categoryName, dto.getCategoryName());
     assertEquals(subCategoryName, dto.getSubCategoryName());
     assertEquals(retailerName, dto.getRetailerName());
@@ -666,7 +674,7 @@ class AppServiceTest {
   
   private static void assertCategory(Category entity, CategoryDto dto){
     assertEquals(entity.getId(), dto.getId());
-    assertEquals(entity.getName(), dto.getName());
+    assertEquals(entity.getCategoryName(), dto.getCategoryName());
     assertNotNull(dto.getCreationDate());
     assertTrue(dto.getIsActive());
     assertNull(dto.getDeletionDate());
@@ -674,7 +682,7 @@ class AppServiceTest {
   
   private static void assertSubCategory(SubCategory entity, SubCategoryDto dto){
     assertEquals(entity.getId(), dto.getId());
-    assertEquals(entity.getName(), dto.getName());
+    assertEquals(entity.getSubCategoryName(), dto.getSubCategoryName());
     assertEquals(entity.getCategoryId(), dto.getCategoryId());
     assertNotNull(dto.getCreationDate());
     assertTrue(dto.getIsActive());
@@ -683,7 +691,7 @@ class AppServiceTest {
   
   private static void assertRetailer(Retailer entity, RetailerDto dto){
     assertEquals(entity.getId(), dto.getId());
-    assertEquals(entity.getName(), dto.getName());
+    assertEquals(entity.getRetailerName(), dto.getRetailerName());
     assertNotNull(dto.getCreationDate());
     assertTrue(dto.getIsActive());
     assertNull(dto.getDeletionDate());

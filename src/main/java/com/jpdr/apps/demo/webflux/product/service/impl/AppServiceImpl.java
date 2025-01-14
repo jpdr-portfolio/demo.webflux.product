@@ -84,11 +84,11 @@ public class AppServiceImpl implements AppService {
       .map(tuple -> {
         ProductDto productDto = ProductMapper.INSTANCE.entityToDto(tuple.getT1());
         productDto.setCategoryId(tuple.getT2().getId());
-        productDto.setCategoryName(tuple.getT2().getName());
+        productDto.setCategoryName(tuple.getT2().getCategoryName());
         productDto.setSubCategoryId(tuple.getT3().getId());
-        productDto.setSubCategoryName(tuple.getT3().getName());
+        productDto.setSubCategoryName(tuple.getT3().getSubCategoryName());
         productDto.setRetailerId(tuple.getT4().getId());
-        productDto.setRetailerName(tuple.getT4().getName());
+        productDto.setRetailerName(tuple.getT4().getRetailerName());
         return productDto;
         })
       .doOnNext(productDto -> log.debug(productDto.toString()))
@@ -116,11 +116,11 @@ public class AppServiceImpl implements AppService {
       .map(tuple -> {
         ProductDto productDto = ProductMapper.INSTANCE.entityToDto(tuple.getT1());
         productDto.setCategoryId(tuple.getT2().getId());
-        productDto.setCategoryName(tuple.getT2().getName());
+        productDto.setCategoryName(tuple.getT2().getCategoryName());
         productDto.setSubCategoryId(tuple.getT3().getId());
-        productDto.setSubCategoryName(tuple.getT3().getName());
+        productDto.setSubCategoryName(tuple.getT3().getSubCategoryName());
         productDto.setRetailerId(tuple.getT4().getId());
-        productDto.setRetailerName(tuple.getT4().getName());
+        productDto.setRetailerName(tuple.getT4().getRetailerName());
         return productDto;
       })
       .doOnNext(productDto -> log.debug(productDto.toString()));
@@ -146,11 +146,11 @@ public class AppServiceImpl implements AppService {
       .map(tuple -> {
         ProductDto productDto = ProductMapper.INSTANCE.entityToDto(tuple.getT1());
         productDto.setCategoryId(tuple.getT2().getId());
-        productDto.setCategoryName(tuple.getT2().getName());
+        productDto.setCategoryName(tuple.getT2().getCategoryName());
         productDto.setSubCategoryId(tuple.getT3().getId());
-        productDto.setSubCategoryName(tuple.getT3().getName());
+        productDto.setSubCategoryName(tuple.getT3().getSubCategoryName());
         productDto.setRetailerId(tuple.getT4().getId());
-        productDto.setRetailerName(tuple.getT4().getName());
+        productDto.setRetailerName(tuple.getT4().getRetailerName());
         return productDto;
         })
         .doOnNext(productDto -> log.debug(productDto.toString()))
@@ -176,11 +176,11 @@ public class AppServiceImpl implements AppService {
       .map(tuple -> {
         ProductDto productDto = ProductMapper.INSTANCE.entityToDto(tuple.getT1());
         productDto.setCategoryId(tuple.getT2().getId());
-        productDto.setCategoryName(tuple.getT2().getName());
+        productDto.setCategoryName(tuple.getT2().getCategoryName());
         productDto.setSubCategoryId(tuple.getT3().getId());
-        productDto.setSubCategoryName(tuple.getT3().getName());
+        productDto.setSubCategoryName(tuple.getT3().getSubCategoryName());
         productDto.setRetailerId(tuple.getT4().getId());
-        productDto.setRetailerName(tuple.getT4().getName());
+        productDto.setRetailerName(tuple.getT4().getRetailerName());
         return productDto;
         })
         .doOnNext(productDto -> log.debug(productDto.toString()))
@@ -206,11 +206,11 @@ public class AppServiceImpl implements AppService {
       .map(tuple -> {
         ProductDto productDto = ProductMapper.INSTANCE.entityToDto(tuple.getT1());
         productDto.setCategoryId(tuple.getT2().getId());
-        productDto.setCategoryName(tuple.getT2().getName());
+        productDto.setCategoryName(tuple.getT2().getCategoryName());
         productDto.setSubCategoryId(tuple.getT3().getId());
-        productDto.setSubCategoryName(tuple.getT3().getName());
+        productDto.setSubCategoryName(tuple.getT3().getSubCategoryName());
         productDto.setRetailerId(tuple.getT4().getId());
-        productDto.setRetailerName(tuple.getT4().getName());
+        productDto.setRetailerName(tuple.getT4().getRetailerName());
         return productDto;
         })
       .doOnNext(productDto -> log.debug(productDto.toString()))
@@ -248,9 +248,9 @@ public class AppServiceImpl implements AppService {
           Mono.just(tuple.getT4())))
       .map(tuple -> {
         ProductDto savedProductDto = ProductMapper.INSTANCE.entityToDto(tuple.getT1());
-        savedProductDto.setCategoryName(tuple.getT2().getName());
-        savedProductDto.setSubCategoryName(tuple.getT3().getName());
-        savedProductDto.setRetailerName(tuple.getT4().getName());
+        savedProductDto.setCategoryName(tuple.getT2().getCategoryName());
+        savedProductDto.setSubCategoryName(tuple.getT3().getSubCategoryName());
+        savedProductDto.setRetailerName(tuple.getT4().getRetailerName());
         return savedProductDto;
       })
       .doOnNext(savedProductDto ->
@@ -303,7 +303,7 @@ public class AppServiceImpl implements AppService {
         ))
       .map(tuple -> {
         SubCategoryDto subCategoryDto = SubCategoryMapper.INSTANCE.entityToDto(tuple.getT1());
-        subCategoryDto.setCategoryName(tuple.getT2().getName());
+        subCategoryDto.setCategoryName(tuple.getT2().getCategoryName());
         return subCategoryDto;
         })
       .doOnNext(subCategory -> log.debug(subCategory.toString()))
@@ -325,7 +325,7 @@ public class AppServiceImpl implements AppService {
         ))
       .map(tuple -> {
         SubCategoryDto subCategoryDto = SubCategoryMapper.INSTANCE.entityToDto(tuple.getT1());
-        subCategoryDto.setCategoryName(tuple.getT2().getName());
+        subCategoryDto.setCategoryName(tuple.getT2().getCategoryName());
         return subCategoryDto;
         })
       .doOnNext(subCategory -> log.debug(subCategory.toString()));
@@ -412,25 +412,29 @@ public class AppServiceImpl implements AppService {
   }
   
   private Mono<ProductDto> validateProduct(ProductDto productDto) {
-    return Mono.just(productDto).filter(product -> isValidName(product.getName())).switchIfEmpty(Mono.error(new ValidationException("The product name is not valid")));
+    return Mono.just(productDto)
+      .filter(product -> isValidName(product.getProductName()))
+      .switchIfEmpty(Mono.error(new ValidationException("The product name is not valid")));
   }
   
   private Mono<CategoryDto> validateCategory(CategoryDto categoryDto) {
-    return Mono.just(categoryDto).filter(category -> isValidName(category.getName())).switchIfEmpty(Mono.error(new ValidationException("The category name is not valid")));
+    return Mono.just(categoryDto)
+      .filter(category -> isValidName(category.getCategoryName()))
+      .switchIfEmpty(Mono.error(new ValidationException("The category name is not valid")));
   }
   
   private Mono<SubCategoryDto> validateSubCategory(SubCategoryDto subCategoryDto){
     return Mono.just(subCategoryDto)
-      .filter(subCategory -> isValidName(subCategory.getName()))
+      .filter(subCategory -> isValidName(subCategory.getSubCategoryName()))
       .switchIfEmpty(Mono.error(new ValidationException("The category name is not valid")));
   }
   
   private Mono<RetailerDto> validateRetailer(RetailerDto retailerDto){
     return Mono.just(retailerDto)
       .filter(retailer -> (retailer != null &&
-        InputValidator.isValidName(retailer.getName()) &&
-        InputValidator.isValidEmail(retailer.getEmail()) &&
-        InputValidator.isValidName(retailer.getAddress())
+        InputValidator.isValidName(retailer.getRetailerName()) &&
+        InputValidator.isValidEmail(retailer.getRetailerEmail()) &&
+        InputValidator.isValidName(retailer.getRetailerAddress())
       ))
       .switchIfEmpty(Mono.error(new ValidationException("Invalid retailer property.")));
   }
@@ -438,7 +442,7 @@ public class AppServiceImpl implements AppService {
   private Mono<Category> getEmptyCategory(Long categoryId){
     return Mono.just(Category.builder()
       .id(categoryId)
-      .name(StringUtils.EMPTY)
+      .categoryName(StringUtils.EMPTY)
       .build());
   }
   
@@ -446,14 +450,14 @@ public class AppServiceImpl implements AppService {
     return Mono.just(SubCategory.builder()
       .id(subCategoryId)
       .categoryId(null)
-      .name(StringUtils.EMPTY)
+      .subCategoryName(StringUtils.EMPTY)
       .build());
   }
   
   private Mono<Retailer> getEmptyRetailer(Long retailerId){
     return Mono.just(Retailer.builder()
       .id(retailerId)
-      .name(StringUtils.EMPTY)
+      .retailerName(StringUtils.EMPTY)
       .build());
   }
   

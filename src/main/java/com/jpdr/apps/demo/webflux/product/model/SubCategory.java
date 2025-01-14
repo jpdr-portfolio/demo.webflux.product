@@ -21,8 +21,8 @@ public class SubCategory {
   Long id;
   @Column("category_id")
   Long categoryId;
-  @Column("name")
-  String name;
+  @Column("sub_category_name")
+  String subCategoryName;
   @Column("is_active")
   Boolean isActive;
   @Column("creation_date")

@@ -19,8 +19,8 @@ public class Category {
   @Id
   @Column("id")
   Long id;
-  @Column("name")
-  String name;
+  @Column("category_name")
+  String categoryName;
   @Column("is_active")
   Boolean isActive;
   @Column("creation_date")

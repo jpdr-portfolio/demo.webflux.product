@@ -21,15 +21,15 @@ public class RetailerDto implements Serializable {
   @JsonInclude(Include.NON_NULL)
   Long id;
   @JsonInclude(Include.NON_NULL)
-  String name;
+  String retailerName;
   @JsonInclude(Include.NON_NULL)
-  String email;
+  String retailerEmail;
   @JsonInclude(Include.NON_NULL)
-  String address;
+  String retailerAddress;
   @JsonInclude(Include.NON_NULL)
-  String city;
+  String retailerCity;
   @JsonInclude(Include.NON_NULL)
-  String country;
+  String retailerCountry;
   @JsonInclude(Include.NON_NULL)
   Boolean isActive;
   @JsonInclude(Include.NON_EMPTY)
